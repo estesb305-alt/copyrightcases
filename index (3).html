@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Copyright Court</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #DCE3EA;
+  --ink: #16243A;
+  --ink-soft: #46566E;
+  --folder: #E9D49E;
+  --folder-edge: #C9AE6C;
+  --paper: #FBFAF6;
+  --line: #B9C4D0;
+  --stamp-red: #A3192E;
+  --stamp-green: #1D6A4C;
+  --btn: #16243A;
+  --btn-ink: #FBFAF6;
+  --bar-a: #3B5C8C;
+  --bar-b: #8C5A2B;
+  --focus: #E0A100;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111A27;
+    --ink: #E6ECF3;
+    --ink-soft: #A7B4C5;
+    --folder: #5A4A28;
+    --folder-edge: #7A6536;
+    --paper: #1B2636;
+    --line: #34445B;
+    --stamp-red: #FF6B7D;
+    --stamp-green: #5FD3A2;
+    --btn: #E6ECF3;
+    --btn-ink: #111A27;
+    --bar-a: #7FA3DA;
+    --bar-b: #D9A066;
+    --focus: #FFC94A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111A27;
+  --ink: #E6ECF3;
+  --ink-soft: #A7B4C5;
+  --folder: #5A4A28;
+  --folder-edge: #7A6536;
+  --paper: #1B2636;
+  --line: #34445B;
+  --stamp-red: #FF6B7D;
+  --stamp-green: #5FD3A2;
+  --btn: #E6ECF3;
+  --btn-ink: #111A27;
+  --bar-a: #7FA3DA;
+  --bar-b: #D9A066;
+  --focus: #FFC94A;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+h1, h2, h3, .serif { font-family: "Bitter", Georgia, "Times New Roman", serif; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+
+/* Header */
+.masthead { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem; }
+.masthead h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; line-height: 1; margin: 0; letter-spacing: -0.01em; }
+.masthead h1 .gavel { display: inline-block; transform: rotate(-20deg); margin-right: 0.15em; }
+.masthead p { margin: 0.5rem 0 0; color: var(--ink-soft); max-width: 46ch; }
+.tools { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.ghost { background: transparent; color: var(--ink); border: 2px solid var(--line); border-radius: 6px; padding: 0.45rem 0.85rem; font-size: 0.95rem; }
+.ghost:hover { border-color: var(--ink-soft); }
+
+/* Docket */
+.docket { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2.2rem 1.4rem; padding-top: 1rem; }
+.folder {
+  position: relative; text-align: left; border: none; color: var(--ink);
+  background: var(--folder); border-radius: 0 8px 8px 8px; padding: 1.2rem 1.2rem 1.1rem;
+  min-height: 170px; display: flex; flex-direction: column; gap: 0.35rem;
+  border-bottom: 4px solid var(--folder-edge);
+  transition: transform 0.15s ease;
+}
+.folder::before {
+  content: attr(data-tab); position: absolute; top: -1.75rem; left: 0;
+  background: var(--folder); padding: 0.2rem 0.9rem 0.3rem; border-radius: 8px 8px 0 0;
+  font-family: "Bitter", Georgia, serif; font-weight: 700; font-size: 0.9rem;
+}
+.folder:hover { transform: translateY(-3px); }
+.folder .emoji { font-size: 2rem; line-height: 1; }
+.folder h3 { margin: 0.2rem 0 0; font-size: 1.3rem; line-height: 1.2; }
+.folder .who { color: var(--ink-soft); font-size: 0.95rem; }
+.folder .mini-stamp {
+  position: absolute; right: 0.8rem; bottom: 0.8rem; transform: rotate(-10deg);
+  font-family: "Bitter", Georgia, serif; font-weight: 800; font-size: 0.8rem;
+  border: 2.5px solid currentColor; padding: 0.1rem 0.45rem; border-radius: 4px; letter-spacing: 0.04em;
+}
+.footer-row { margin-top: 2.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; }
+.primary {
+  background: var(--btn); color: var(--btn-ink); border: none; border-radius: 6px;
+  padding: 0.75rem 1.3rem; font-weight: 700; font-size: 1.05rem;
+}
+.primary:hover { filter: brightness(1.12); }
+.primary[disabled] { opacity: 0.45; cursor: not-allowed; }
+.credit { color: var(--ink-soft); font-size: 0.9rem; max-width: 60ch; }
+
+/* Case view */
+.case-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 860px) { .case-grid { grid-template-columns: 1fr; } }
+.casefile {
+  position: relative; background: var(--paper); border-radius: 0 10px 10px 10px;
+  border-top: 14px solid var(--folder); padding: 1.6rem 1.7rem 1.8rem; overflow: hidden;
+}
+.casefile .num { font-family: "Bitter", Georgia, serif; color: var(--ink-soft); font-weight: 700; margin: 0; }
+.casefile h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.1; margin: 0.25rem 0 0.4rem; }
+.casefile .who { color: var(--ink-soft); margin: 0 0 1rem; }
+.casefile .story { max-width: 62ch; margin: 0 0 1.2rem; }
+.casefile h3 { font-size: 1.1rem; margin: 1.2rem 0 0.4rem; }
+.exhibits { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
+.exhibits li { padding-left: 2.4rem; position: relative; max-width: 60ch; }
+.exhibits li::before {
+  content: attr(data-x); position: absolute; left: 0; top: 0.05rem;
+  font-family: "Bitter", Georgia, serif; font-weight: 800; font-size: 0.85rem;
+  border: 2px solid var(--line); border-radius: 4px; padding: 0 0.35rem;
+}
+.question { font-family: "Bitter", Georgia, serif; font-weight: 700; font-size: 1.35rem; margin: 1.5rem 0 0; max-width: 40ch; line-height: 1.3; }
+
+.stamp {
+  position: absolute; top: 1.4rem; right: 1.2rem; transform: rotate(-12deg);
+  font-family: "Bitter", Georgia, serif; font-weight: 800; font-size: clamp(1.2rem, 3vw, 1.9rem);
+  border: 5px solid currentColor; border-radius: 8px; padding: 0.2rem 0.8rem;
+  letter-spacing: 0.05em; text-align: center; line-height: 1.15; background: color-mix(in srgb, var(--paper) 70%, transparent);
+  pointer-events: none;
+}
+.stamp.slam { animation: slam 0.45s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes slam { from { transform: rotate(-12deg) scale(2.4); opacity: 0; } to { transform: rotate(-12deg) scale(1); opacity: 1; } }
+.casefile.shake { animation: shake 0.3s 0.3s ease; }
+@keyframes shake { 0%,100% { translate: 0 0; } 30% { translate: -4px 2px; } 60% { translate: 3px -1px; } }
+
+.ruling { margin-top: 1.5rem; border-top: 2px dashed var(--line); padding-top: 1.2rem; }
+.ruling p { max-width: 62ch; margin: 0 0 0.8rem; }
+.twist { background: var(--bg); border-radius: 8px; padding: 0.9rem 1.1rem; max-width: 62ch; }
+.twist strong { font-family: "Bitter", Georgia, serif; }
+
+/* Jury box */
+.jury { background: var(--paper); border-radius: 10px; padding: 1.4rem; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); }
+.jury h3 { margin: 0 0 0.25rem; font-size: 1.4rem; }
+.jury .hint { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 1.1rem; }
+.option { margin-bottom: 1.2rem; }
+.option-top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.option-name { font-weight: 700; }
+.option-count { font-family: "Bitter", Georgia, serif; font-weight: 800; font-size: 1.8rem; line-height: 1; }
+.bar { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; margin: 0.45rem 0 0.55rem; }
+.bar > span { display: block; height: 100%; width: 0; transition: width 0.3s ease; border-radius: 7px; }
+.counter { display: flex; gap: 0.5rem; }
+.counter button { border: 2px solid var(--line); background: transparent; color: var(--ink); border-radius: 6px; padding: 0.35rem 0.9rem; font-weight: 700; }
+.counter button.add { flex: 1; }
+.counter button:hover { border-color: var(--ink-soft); }
+.option.winner .option-name::after { content: " ✓ court agreed"; color: var(--stamp-green); font-weight: 700; font-size: 0.9rem; }
+.jury .primary { width: 100%; margin-top: 0.4rem; font-size: 1.15rem; padding: 0.9rem; }
+.keys { color: var(--ink-soft); font-size: 0.85rem; margin: 0.9rem 0 0; }
+kbd { font-family: inherit; border: 1.5px solid var(--line); border-radius: 4px; padding: 0 0.3rem; font-size: 0.8rem; }
+
+.deliberate { margin-top: 1.2rem; }
+.deliberate h3 { font-size: 1.2rem; }
+.deliberate ol { margin: 0.3rem 0 0; padding-left: 1.3rem; display: grid; gap: 0.4rem; }
+.nav-row { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.3rem; flex-wrap: wrap; }
+
+/* Results */
+.results { background: var(--paper); border-radius: 10px; padding: 2rem; max-width: 820px; }
+.results h2 { font-size: clamp(2rem, 4.5vw, 3rem); margin: 0 0 0.3rem; line-height: 1.1; }
+.score { font-family: "Bitter", Georgia, serif; font-weight: 800; font-size: clamp(3.5rem, 10vw, 6rem); line-height: 1; margin: 1rem 0 0.3rem; }
+.tally { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 0.5rem; }
+.tally li { display: flex; gap: 0.75rem; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 0.5rem; }
+.tally .mark { font-weight: 800; width: 1.4rem; flex: none; }
+.agree { color: var(--stamp-green); }
+.disagree { color: var(--stamp-red); }
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp.slam, .casefile.shake { animation: none; }
+  .folder, .bar > span { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const CASES = [
+  {
+    id: "carlton", emoji: "🕺", tab: "Case 1", title: "The Carlton vs. Fortnite",
+    who: "Alfonso Ribeiro v. Epic Games, 2018",
+    story: "Alfonso Ribeiro made “the Carlton” dance famous on The Fresh Prince of Bel-Air. Fortnite added a nearly identical emote that players could buy. Ribeiro sued Epic Games, the company behind Fortnite.",
+    exhibits: [
+      "The dance is closely tied to Ribeiro and is instantly recognizable.",
+      "Epic made money selling the emote to players.",
+      "Copyright can protect choreography, but the Copyright Office does not protect social dances or simple routines."
+    ],
+    question: "Did Fortnite break copyright law by selling the Carlton?",
+    options: ["Yes, infringement", "No, not infringement"], court: 1,
+    stamp: "CASE DROPPED", stampColor: "red",
+    ruling: "The Copyright Office refused to register the Carlton, calling it a simple dance routine. Without that registration, Ribeiro dropped his lawsuit in 2019.",
+    twist: "In 2023, a federal appeals court let choreographer Kyle Hanagami’s lawsuit against Epic move forward, saying even a short piece of choreography can be protected. The dance fight isn’t over.",
+    think: "Should a dance move be ownable? What would happen to TikTok trends if it were?"
+  },
+  {
+    id: "monkey", emoji: "🐒", tab: "Case 2", title: "The Monkey Selfie",
+    who: "Naruto (a monkey) v. David Slater, 2015–2018",
+    story: "On a trip to Indonesia, photographer David Slater set up his camera, and a crested macaque grabbed it and snapped a grinning selfie. The photo went viral. An animal rights group sued on the monkey’s behalf, claiming the monkey owned the copyright.",
+    exhibits: [
+      "The monkey physically pressed the shutter button.",
+      "Slater owned the camera and traveled there to take photos.",
+      "U.S. copyright law talks about “authors” but never says whether that has to mean a person."
+    ],
+    question: "Can the monkey own the copyright to its selfie?",
+    options: ["Yes, the monkey owns it", "No, a monkey can’t"], court: 1,
+    stamp: "NOT THE AUTHOR", stampColor: "green",
+    ruling: "In 2018, a federal appeals court ruled that animals can’t sue for copyright under U.S. law. The Copyright Office also says it won’t register works made by animals.",
+    twist: "Before the ruling, Slater settled with the animal rights group and agreed to donate a share of future earnings from the photos to help protect macaques.",
+    think: "If the monkey can’t own it, should anyone own it?"
+  },
+  {
+    id: "ai-author", emoji: "🤖", tab: "Case 3", title: "The Robot Artist",
+    who: "Thaler v. Perlmutter, 2019–2025",
+    story: "Computer scientist Stephen Thaler built an AI system and says it created a painting called “A Recent Entrance to Paradise” entirely on its own. He applied for a copyright and listed the AI as the author.",
+    exhibits: [
+      "Thaler says no human made any creative choices in the image.",
+      "Thaler built and owned the AI system.",
+      "If the art isn’t copyrighted, anyone can copy and sell it."
+    ],
+    question: "Can an AI be the legal author of a work?",
+    options: ["Yes, the AI can be the author", "No, it needs a human author"], court: 1,
+    stamp: "HUMANS ONLY", stampColor: "green",
+    ruling: "The Copyright Office refused the registration. In 2025, a federal appeals court agreed that U.S. copyright requires a human author.",
+    twist: "",
+    think: "Think about our pixel images. If you used a tool to make them, how much do you need to do yourself for the work to count as yours?"
+  },
+  {
+    id: "zarya", emoji: "📚", tab: "Case 4", title: "The AI Comic Book",
+    who: "Zarya of the Dawn, U.S. Copyright Office, 2023",
+    story: "Kris Kashtanova wrote a comic book called Zarya of the Dawn. Kashtanova wrote the story and chose and arranged every panel, but made the pictures with the AI image generator Midjourney. The comic got a copyright registration, and then the Copyright Office took a second look.",
+    exhibits: [
+      "Every word of the story was written by a human.",
+      "A human picked which images to use and the order they go in.",
+      "The images were generated from text prompts typed into Midjourney."
+    ],
+    question: "Is the whole comic protected by copyright?",
+    options: ["Yes, all of it", "No, not all of it"], court: 1,
+    stamp: "SPLIT DECISION", stampColor: "red",
+    ruling: "The Copyright Office decided that the text and the way the images were selected and arranged are protected, but the individual AI-made images are not.",
+    twist: "",
+    think: "Compare this with Case 3. Why did a human’s involvement change the outcome?"
+  },
+  {
+    id: "blurred", emoji: "🎵", tab: "Case 5", title: "Blurred Lines",
+    who: "Marvin Gaye’s family v. Robin Thicke & Pharrell Williams, 2015",
+    story: "“Blurred Lines” was a huge 2013 hit. Marvin Gaye’s family said it copied his 1977 song “Got to Give It Up.” The melodies and lyrics are different, but the family pointed to the groove, the percussion, and the overall sound.",
+    exhibits: [
+      "Pharrell said in interviews that he was a fan of Gaye’s music.",
+      "No single melody line was copied note for note.",
+      "Musicians borrow styles and grooves from each other all the time."
+    ],
+    question: "Did “Blurred Lines” infringe Marvin Gaye’s copyright?",
+    options: ["Yes, infringement", "No, just inspired by it"], court: 0,
+    stamp: "INFRINGEMENT", stampColor: "red",
+    ruling: "In 2015, a jury sided with Gaye’s family, and an appeals court upheld the decision in 2018. The final judgment was about $5 million.",
+    twist: "Many musicians signed a letter warning that the ruling could make it risky to be influenced by any artist or genre.",
+    think: "Who is helped and who is hurt if a song’s “feel” can be owned?"
+  },
+  {
+    id: "sheeran", emoji: "🎸", tab: "Case 6", title: "Thinking Out Loud",
+    who: "Heirs of Ed Townsend v. Ed Sheeran, 2023",
+    story: "The family of Ed Townsend, who co-wrote Marvin Gaye’s “Let’s Get It On,” said Ed Sheeran’s 2014 song “Thinking Out Loud” copied its chord progression and rhythm.",
+    exhibits: [
+      "The two songs share a similar chord progression and rhythm.",
+      "Sheeran played guitar in court to show those chords are used in many songs.",
+      "This trial came after the Blurred Lines decision."
+    ],
+    question: "Did “Thinking Out Loud” infringe “Let’s Get It On”?",
+    options: ["Yes, infringement", "No, not infringement"], court: 1,
+    stamp: "NOT LIABLE", stampColor: "green",
+    ruling: "In 2023, a jury found that Sheeran created his song independently and did not infringe. His team argued that common chord progressions are building blocks of music that no one can own.",
+    twist: "",
+    think: "Compare this with Blurred Lines. What made these two cases come out differently?"
+  },
+  {
+    id: "tattoos", emoji: "🏀", tab: "Case 7", title: "LeBron’s Tattoos in NBA 2K",
+    who: "Solid Oak Sketches v. 2K Games, 2020",
+    story: "A company bought the copyrights to tattoo designs on LeBron James and other NBA players. The NBA 2K video games show the players with their real tattoos. The company sued the game maker.",
+    exhibits: [
+      "The tattoo designs are original artwork.",
+      "The tattoos appear on players’ bodies in a game that sells millions of copies.",
+      "The tattoos are small, and most players would barely notice them during a game."
+    ],
+    question: "Did NBA 2K infringe by showing the tattoos?",
+    options: ["Yes, infringement", "No, not infringement"], court: 1,
+    stamp: "NOT INFRINGEMENT", stampColor: "green",
+    ruling: "A federal court in New York ruled for the game maker. It said the tattoos were too small to matter, the players had given permission to show their real appearance, and the use was fair use.",
+    twist: "In 2022, a jury in a different case decided that WWE 2K did infringe a tattoo artist’s copyright by showing wrestler Randy Orton’s tattoos, but it awarded only $3,750.",
+    think: "Should you need permission from your tattoo artist to appear in a video game?"
+  },
+  {
+    id: "warhol", emoji: "🖼️", tab: "Case 8", title: "Warhol’s Prince",
+    who: "Andy Warhol Foundation v. Goldsmith, U.S. Supreme Court, 2023",
+    story: "Photographer Lynn Goldsmith took a portrait of the musician Prince in 1981. Artist Andy Warhol used it to make a series of bold, colorful silkscreen artworks. After Prince died in 2016, the Warhol Foundation licensed one of them to a magazine for its cover, and Goldsmith got nothing.",
+    exhibits: [
+      "Warhol changed the colors and style a lot.",
+      "Goldsmith licenses her photos to magazines, too.",
+      "Fair use can allow new work that transforms the original."
+    ],
+    question: "Was licensing Warhol’s Prince to the magazine fair use?",
+    options: ["Yes, fair use", "No, infringement"], court: 1,
+    stamp: "NOT FAIR USE", stampColor: "red",
+    ruling: "The Supreme Court ruled 7–2 for Goldsmith. Because the magazine used Warhol’s image for the same purpose as her photo, a picture of Prince for a magazine, the license was not fair use.",
+    twist: "",
+    think: "How much do you need to change something before it becomes yours?"
+  }
+];
+
+const DELIBERATE = [
+  "Who benefits from this ruling?",
+  "Who is harmed by it?",
+  "Are those impacts intended or unintended? How do you know?"
+];
+const STORE_KEY = "copyright-court-v1";
+
+let state = load();
+let view = "docket";
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { votes: {}, revealed: {} };
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function votesFor(id) {
+  if (!state.votes[id]) state.votes[id] = [0, 0];
+  return state.votes[id];
+}
+function majority(id) {
+  const v = votesFor(id);
+  if (v[0] === v[1]) return -1;
+  return v[0] > v[1] ? 0 : 1;
+}
+function esc(s) {
+  return s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+const app = document.getElementById("app");
+
+function render(slam) {
+  if (view === "docket") renderDocket();
+  else if (view === "results") renderResults();
+  else renderCase(view, slam);
+  window.scrollTo({ top: 0 });
+}
+
+function masthead(sub) {
+  return `
+  <header class="masthead">
+    <div>
+      <h1><span class="gavel" aria-hidden="true">🔨</span>Copyright Court</h1>
+      <p>${sub}</p>
+    </div>
+    <div class="tools">
+      <button class="ghost" data-act="theme">Switch light/dark</button>
+      <button class="ghost" data-act="reset">Clear all votes</button>
+    </div>
+  </header>`;
+}
+
+function renderDocket() {
+  const done = CASES.filter(c => state.revealed[c.id]).length;
+  app.innerHTML = masthead("You are the jury. Pick a case file, read the evidence, vote, and then find out what the real court decided.") + `
+  <main>
+    <div class="docket">
+      ${CASES.map(c => {
+        const r = state.revealed[c.id];
+        const color = c.stampColor === "red" ? "var(--stamp-red)" : "var(--stamp-green)";
+        return `<button class="folder" data-tab="${c.tab}" data-open="${c.id}" aria-label="${esc(c.tab + ": " + c.title + (r ? ", verdict revealed" : ""))}">
+          <span class="emoji" aria-hidden="true">${c.emoji}</span>
+          <h3>${esc(c.title)}</h3>
+          <span class="who">${esc(c.who)}</span>
+          ${r ? `<span class="mini-stamp" style="color:${color}">${esc(c.stamp)}</span>` : ""}
+        </button>`;
+      }).join("")}
+    </div>
+    <div class="footer-row">
+      <p class="credit">Learning activity created by B.Estes assisted with AI, used with permission. Case summaries are simplified for class discussion.</p>
+      <button class="primary" data-act="results" ${done ? "" : "disabled"}>See the class scorecard (${done} of ${CASES.length} decided)</button>
+    </div>
+  </main>`;
+}
+
+function renderCase(id, slam) {
+  const i = CASES.findIndex(c => c.id === id);
+  const c = CASES[i];
+  const v = votesFor(id);
+  const total = v[0] + v[1];
+  const revealed = !!state.revealed[id];
+  const color = c.stampColor === "red" ? "var(--stamp-red)" : "var(--stamp-green)";
+  const letters = ["A", "B", "C", "D"];
+  app.innerHTML = `
+  <main>
+    <div class="nav-row" style="margin:0 0 1.2rem">
+      <button class="ghost" data-act="docket">Back to all cases</button>
+      <button class="ghost" data-act="theme">Switch light/dark</button>
+    </div>
+    <div class="case-grid">
+      <article class="casefile ${slam ? "shake" : ""}">
+        ${revealed ? `<div class="stamp ${slam ? "slam" : ""}" style="color:${color}">${esc(c.stamp)}</div>` : ""}
+        <p class="num">${c.tab} of ${CASES.length}</p>
+        <h2><span aria-hidden="true">${c.emoji}</span> ${esc(c.title)}</h2>
+        <p class="who">${esc(c.who)}</p>
+        <p class="story">${esc(c.story)}</p>
+        <h3>The evidence</h3>
+        <ul class="exhibits">
+          ${c.exhibits.map((e, k) => `<li data-x="${letters[k]}">${esc(e)}</li>`).join("")}
+        </ul>
+        <p class="question">${esc(c.question)}</p>
+        ${revealed ? `
+        <section class="ruling" aria-live="polite">
+          <h3>What the court decided</h3>
+          <p>${esc(c.ruling)}</p>
+          ${c.twist ? `<p class="twist"><strong>Plot twist:</strong> ${esc(c.twist)}</p>` : ""}
+        </section>` : ""}
+      </article>
+
+      <aside class="jury">
+        <h3>Jury box</h3>
+        <p class="hint">${revealed ? "The verdict is in. Was the class right?" : "Collect votes in the chat or a poll, then add them here."}</p>
+        ${c.options.map((o, k) => {
+          const pct = total ? Math.round(v[k] / total * 100) : 0;
+          return `<div class="option ${revealed && c.court === k ? "winner" : ""}">
+            <div class="option-top"><span class="option-name">${esc(o)}</span><span class="option-count" aria-live="polite">${v[k]}</span></div>
+            <div class="bar" aria-hidden="true"><span style="width:${pct}%;background:${k ? "var(--bar-b)" : "var(--bar-a)"}"></span></div>
+            <div class="counter">
+              <button class="add" data-vote="${k}" data-d="1" aria-label="Add a vote for ${esc(o)}">+1 vote</button>
+              <button data-vote="${k}" data-d="-1" aria-label="Remove a vote for ${esc(o)}">−1</button>
+            </div>
+          </div>`;
+        }).join("")}
+        ${revealed
+          ? `<div class="deliberate">
+              <h3>Jury deliberation</h3>
+              <ol>${DELIBERATE.map(q => `<li>${q}</li>`).join("")}<li>${esc(c.think)}</li></ol>
+            </div>`
+          : `<button class="primary" data-act="reveal">Reveal the verdict</button>`}
+        <div class="nav-row">
+          ${i > 0 ? `<button class="ghost" data-open="${CASES[i - 1].id}">Previous case</button>` : "<span></span>"}
+          ${i < CASES.length - 1 ? `<button class="ghost" data-open="${CASES[i + 1].id}">Next case</button>` : `<button class="ghost" data-act="results">Class scorecard</button>`}
+        </div>
+        <p class="keys">Shortcuts: <kbd>1</kbd> or <kbd>2</kbd> add a vote, <kbd>Shift</kbd> + number removes one, <kbd>Enter</kbd> reveals, <kbd>←</kbd> <kbd>→</kbd> change cases, <kbd>Esc</kbd> goes back.</p>
+      </aside>
+    </div>
+  </main>`;
+}
+
+function renderResults() {
+  const decided = CASES.filter(c => state.revealed[c.id]);
+  const agreed = decided.filter(c => majority(c.id) === c.court).length;
+  app.innerHTML = masthead("Here’s how the class jury compared with the real courts.") + `
+  <main class="results">
+    <h2>Class scorecard</h2>
+    <p class="score">${agreed} of ${decided.length}</p>
+    <p>times the class majority agreed with the real decision.</p>
+    <ul class="tally">
+      ${decided.map(c => {
+        const m = majority(c.id);
+        const v = votesFor(c.id);
+        const ok = m === c.court;
+        const label = m === -1 ? "The class was tied" : `Class voted “${c.options[m]}”`;
+        return `<li><span class="mark ${ok ? "agree" : "disagree"}" aria-hidden="true">${ok ? "✓" : "✗"}</span>
+          <span><strong>${esc(c.title)}</strong>: ${esc(label)} (${v[0]}–${v[1]}). The court’s answer was “${esc(c.options[c.court])}.”</span></li>`;
+      }).join("")}
+    </ul>
+    <p style="margin-top:1.5rem;max-width:60ch">Final question for the jury: based on these cases, are our current copyright policies helping society or hurting society?</p>
+    <div class="nav-row"><button class="primary" data-act="docket">Back to all cases</button></div>
+  </main>`;
+}
+
+function setTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute("data-theme") ||
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = current === "dark" ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+  try { localStorage.setItem(STORE_KEY + "-theme", next); } catch (e) {}
+}
+try {
+  const t = localStorage.getItem(STORE_KEY + "-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+} catch (e) {}
+
+function vote(k, d) {
+  const v = votesFor(view);
+  v[k] = Math.max(0, v[k] + d);
+  save();
+  render(false);
+}
+function reveal() {
+  if (state.revealed[view]) return;
+  state.revealed[view] = true;
+  save();
+  render(true);
+}
+
+app.addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.open) { view = b.dataset.open; render(false); return; }
+  if (b.dataset.vote !== undefined) { vote(+b.dataset.vote, +b.dataset.d); return; }
+  const act = b.dataset.act;
+  if (act === "docket") { view = "docket"; render(false); }
+  else if (act === "results") { view = "results"; render(false); }
+  else if (act === "reveal") reveal();
+  else if (act === "theme") setTheme();
+  else if (act === "reset") {
+    if (confirm("Clear every vote and verdict?")) { state = { votes: {}, revealed: {} }; save(); render(false); }
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (view === "docket" || view === "results") return;
+  const i = CASES.findIndex(c => c.id === view);
+  if (e.code === "Digit1" || e.code === "Digit2") {
+    e.preventDefault();
+    vote(e.code === "Digit1" ? 0 : 1, e.shiftKey ? -1 : 1);
+  } else if (e.key === "Enter" && !e.target.closest("button")) { e.preventDefault(); reveal(); }
+  else if (e.key === "ArrowRight" && i < CASES.length - 1) { view = CASES[i + 1].id; render(false); }
+  else if (e.key === "ArrowLeft" && i > 0) { view = CASES[i - 1].id; render(false); }
+  else if (e.key === "Escape") { view = "docket"; render(false); }
+});
+
+render(false);
+</script>
+</body>
+</html>
